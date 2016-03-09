@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Foundation
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        try! AVAudioSession.sharedInstance().setCategory(AVAudioSessionCategoryPlayback)
+        application.beginReceivingRemoteControlEvents()
         return true
     }
 
@@ -51,6 +55,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return false
         
+    }
+    //程序挂起时
+    func applicationWillResignActive(_ application: UIApplication) {
+        
+    
     }
   
 }

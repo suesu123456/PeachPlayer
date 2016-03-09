@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "D6C195A0053B253B6D1839F57A8E80CCC6C53B29",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "D6C195A0053B253B6D1839F57A8E80CCC6C53B29" : 0,
+    "06B08C0A9D479E7A517F56AB1B1185642AD4AE2D" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "F696AD05-4E96-4C81-9EF7-58A0C0E4A9A0",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "D6C195A0053B253B6D1839F57A8E80CCC6C53B29" : "peachplayer\/",
+    "06B08C0A9D479E7A517F56AB1B1185642AD4AE2D" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "PeachPlayer",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "PeachPlayer.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/suesu123456\/-swift-alimonyCal.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "06B08C0A9D479E7A517F56AB1B1185642AD4AE2D"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/suesu123456\/PeachPlayer.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D6C195A0053B253B6D1839F57A8E80CCC6C53B29"
+    }
+  ]
+}

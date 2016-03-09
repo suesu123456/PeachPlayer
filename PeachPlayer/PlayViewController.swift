@@ -22,9 +22,10 @@ class PlayViewController: UIViewController {
         self.view.backgroundColor = UIColor.blackColor()
         self.title = data["name"] as? String
         initView()
-        playButtonAnimation()
+        initPlayer()
+        
         //默认进入该页面就是播放状态
-        //initPlayer()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,6 +49,10 @@ class PlayViewController: UIViewController {
         playButton.contentMode = .ScaleAspectFit
         playButton.layer.masksToBounds = true
         playButton.layer.cornerRadius = 40
+        let ges = UITapGestureRecognizer(target: self, action: "handlePlay")
+        ges.numberOfTapsRequired = 1
+        ges.numberOfTouchesRequired = 1
+        playButton.addGestureRecognizer(ges)
         bottomView.addSubview(playButton)
         //下一曲
         let nextButton = UIButton(frame: CGRectMake(playButton.frame.maxX + 20, 30, 40, 40))
@@ -58,22 +63,56 @@ class PlayViewController: UIViewController {
     }
     
     func playButtonAnimation() {
-        UIView.animateWithDuration(2.0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut,  animations: {  [weak self]() -> Void in
+        UIView.animateWithDuration(3.0, delay: 0, options: .CurveLinear,  animations: {  [weak self]() -> Void in
             if let weakSelf = self {
-                weakSelf.playButton.transform = CGAffineTransformMakeRotation(CGFloat(M_PI))
+                weakSelf.playButton.transform = CGAffineTransformRotate(weakSelf.playButton.transform, CGFloat(M_PI))
             }
             }, completion: { [weak self](Bool) -> Void in
                 if let weakSelf = self {
                     weakSelf.playButtonAnimation()
                 }
             })
+      
     }
     
     func initPlayer() {
         player = try? AVAudioPlayer(data: data["data"] as! NSData, fileTypeHint: "mp3")
         player.play()
+        playButtonAnimation()
     }
     
+    func handlePlay() {
+        player.pause()
+    }
+    
+    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+        if event?.type == UIEventType.RemoteControl {
+            
+            switch event!.subtype {
+                
+            case UIEventSubtype.RemoteControlPause:
+                //点击了暂停
+                player.pause()
+                break;
+            case UIEventSubtype.RemoteControlNextTrack:
+                //点击了下一首
+                //[self playNextMusic];
+                break;
+            case UIEventSubtype.RemoteControlPreviousTrack:
+                //点击了上一首
+                //[self playPreMusic];
+                //此时需要更改歌曲信息
+                break;
+            case UIEventSubtype.RemoteControlPlay:
+                //点击了播放
+                player.pause()
+                break;
+            default:
+                break;
+            }
+        }
+
+    }
 
     /*
     // MARK: - Navigation
