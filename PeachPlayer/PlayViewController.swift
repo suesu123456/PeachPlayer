@@ -19,7 +19,7 @@ class PlayViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.view.backgroundColor = UIColor.whiteColor()
+        self.view.backgroundColor = UIColor.blackColor()
         self.title = data["name"] as? String
         initView()
         playButtonAnimation()
@@ -38,21 +38,21 @@ class PlayViewController: UIViewController {
         self.view.addSubview(bottomView)
         //上一曲
         var x = SCREEN_WIDTH / 5
-        let lastButton = UIButton(frame: CGRectMake(x, 25, 50, 50))
-        lastButton.setImage(UIImage(), forState: .Normal)
-        lastButton.backgroundColor = UIColor.redColor()
+        let lastButton = UIButton(frame: CGRectMake(x, 30, 40, 40))
+        lastButton.setImage(UIImage(named: "last_piece"), forState: .Normal)
+        lastButton.contentMode = .ScaleAspectFit
         bottomView.addSubview(lastButton)
         //播放，暂停按钮
-        playButton = UIButton(frame: CGRectMake(lastButton.frame.maxX + 10, 10, 80, 80))
+        playButton = UIButton(frame: CGRectMake(lastButton.frame.maxX + 20, 10, 80, 80))
         playButton.setImage(data["image"] as! UIImage, forState: UIControlState.Normal)
         playButton.contentMode = .ScaleAspectFit
         playButton.layer.masksToBounds = true
         playButton.layer.cornerRadius = 40
         bottomView.addSubview(playButton)
         //下一曲
-        let nextButton = UIButton(frame: CGRectMake(playButton.frame.maxX + 10, 25, 50, 50))
-        nextButton.setImage(UIImage(), forState: .Normal)
-        nextButton.backgroundColor = UIColor.grayColor()
+        let nextButton = UIButton(frame: CGRectMake(playButton.frame.maxX + 20, 30, 40, 40))
+        nextButton.setImage(UIImage(named: "next_piece"), forState: .Normal)
+        nextButton.contentMode = .ScaleAspectFit
         bottomView.addSubview(nextButton)
         
     }
