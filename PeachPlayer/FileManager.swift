@@ -13,26 +13,51 @@ class FileManager: NSObject {
     static var appPath: String = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.AllDomainsMask, true)[0]
     static var airdrop: String = "AirDrop"
     
-    static func readList() -> [[String: AnyObject]] {
-        var result: [[String: AnyObject]] = []
+    //读取所有文件列表
+    static func readList() -> [[String: [MusicModel]]] {
+        var result: [[String: [MusicModel]]] = []
         let air = isExitFile(true, fileName: "", directory: airdrop)
         if air { //如果有传过文件
             let urls: [String] = applicationReadFileOfDirectoryAtPath("", directory: airdrop) as! [String]
+            var i = 0
+            var dir = "/"
+            let dict = [dir: [MusicModel]()]
+            result.append(dict)
             for var fileName in urls {
                 let filePath = applicationFilePath(fileName, directory: airdrop)
-                print(filePath)
-                var dict: [String: AnyObject] = [String: AnyObject]()
+                var flag: ObjCBool = false
+                NSFileManager.defaultManager().fileExistsAtPath(filePath, isDirectory: &flag)
+                if flag {
+                   //是文件夹
+                    let dict = [fileName: [MusicModel]()]
+                    result.append(dict)
+                    dir = fileName
+                    i++
+                    continue
+                }
+                var model = MusicModel()
                 let data = NSData.dataWithContentsOfMappedFile(filePath) as! NSData
-                dict["data"] = data
-                dict["name"] = fileName
-                dict["size"] = data.length
-                dict["image"] = Common.musicImageWithData(NSURL(fileURLWithPath: filePath))
-                result.append(dict)
+                model.name = fileName
+                model.size = data.length
+                model.image = Common.musicImageWithData(NSURL(fileURLWithPath: filePath))
+                model.data = data
+                result[0]["/"]?.append(model)
             }
         }
         return result
     }
     
+    //在根目录新建文件夹
+    static func createDir(name: String) {
+        self.applicationCreatFileAtPath(true, fileName: "", directory: airdrop + "/" + name)
+    }
+    
+    //移动文件到文件夹
+    static func moveToDir(sourceFile: String, toDir: String) {
+        let sourcePath = applicationFilePath(sourceFile, directory: airdrop)
+        let toPath = applicationFilePath("", directory: airdrop + "/" + toDir)
+        try? NSFileManager.defaultManager().moveItemAtPath(sourcePath, toPath: toPath)
+    }
     
     
     
@@ -82,5 +107,27 @@ class FileManager: NSObject {
         }
         
     }
-    
+    //创建文件或文件夹在指定路径下
+    static func applicationCreatFileAtPath(fileTypeDirectory: Bool ,fileName: String ,directory: String) -> Bool {
+        
+        let filePath = applicationFilePath(fileName, directory: directory)
+        let isExit = isExitFile(fileTypeDirectory, fileName: fileName, directory: directory)
+        
+        if isExit {
+            print("已经存在文件或文件夹")
+            return false
+        }else{
+            if fileTypeDirectory {//文件夹
+                do {
+                    try NSFileManager.defaultManager().createDirectoryAtPath(filePath, withIntermediateDirectories: true, attributes: nil)
+                    return true
+                } catch _ {
+                    return false
+                }
+            }else{//普通文件（图片、plist、txt等等）
+                return NSFileManager.defaultManager().createFileAtPath(filePath, contents: nil, attributes: nil)
+            }
+        }
+    }
+
 }

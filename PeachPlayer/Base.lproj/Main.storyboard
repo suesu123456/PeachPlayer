@@ -58,7 +58,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iMy-Bu-DKv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1105" y="483"/>
+            <point key="canvasLocation" x="304" y="1243"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="9Rk-H5-Nfo">
@@ -67,6 +67,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="5dU-zA-hSw">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <color key="barTintColor" red="0.019743753597140312" green="0.015891456976532936" blue="0.0033899270929396152" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <textAttributes key="titleTextAttributes">
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

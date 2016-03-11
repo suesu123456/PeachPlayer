@@ -21,8 +21,13 @@
 		D25A0FF71C8FD65800B88B95 /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25A0FF61C8FD65800B88B95 /* Common.swift */; };
 		D25A0FF91C8FF41300B88B95 /* NSArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25A0FF81C8FF41300B88B95 /* NSArray.swift */; };
 		D25A0FFB1C8FF44500B88B95 /* NSDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25A0FFA1C8FF44500B88B95 /* NSDictionary.swift */; };
+		D2625C5E1C9274FE00B96B30 /* MusicModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2625C5D1C9274FE00B96B30 /* MusicModel.swift */; };
 		D27E08891C8EA44C0053CB6B /* 陶喆 - 一念之间.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = D27E08881C8EA44C0053CB6B /* 陶喆 - 一念之间.mp3 */; };
 		D28EE10A1C8ECB0C00C655A8 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D28EE1091C8ECB0C00C655A8 /* AVFoundation.framework */; };
+		D2E0DE4A1C9107BC00D999AE /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DE491C9107BC00D999AE /* Player.swift */; };
+		D2E0DE4F1C91604C00D999AE /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DE4C1C91604C00D999AE /* MBProgressHUD.m */; };
+		D2E0DE501C91604C00D999AE /* MBProgressHUD+Add.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DE4E1C91604C00D999AE /* MBProgressHUD+Add.m */; };
+		D2E0DE521C91650D00D999AE /* KWPopoverView.m in Sources */ = {isa = PBXBuildFile; fileRef = D2E0DE511C91650D00D999AE /* KWPopoverView.m */; };
 		D2F724011C8FFB94003E6C29 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F724001C8FFB94003E6C29 /* CoreMedia.framework */; };
 		D2F724031C8FFB9A003E6C29 /* MediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D2F724021C8FFB9A003E6C29 /* MediaPlayer.framework */; };
 		D2F724051C90004D003E6C29 /* PlayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F724041C90004D003E6C29 /* PlayViewController.swift */; };
@@ -70,8 +75,16 @@
 		D25A0FF61C8FD65800B88B95 /* Common.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		D25A0FF81C8FF41300B88B95 /* NSArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSArray.swift; sourceTree = "<group>"; };
 		D25A0FFA1C8FF44500B88B95 /* NSDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDictionary.swift; sourceTree = "<group>"; };
+		D2625C5D1C9274FE00B96B30 /* MusicModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicModel.swift; sourceTree = "<group>"; };
 		D27E08881C8EA44C0053CB6B /* 陶喆 - 一念之间.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "陶喆 - 一念之间.mp3"; path = "source/陶喆 - 一念之间.mp3"; sourceTree = "<group>"; };
 		D28EE1091C8ECB0C00C655A8 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		D2E0DE491C9107BC00D999AE /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		D2E0DE4B1C91604C00D999AE /* MBProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MBProgressHUD.h; sourceTree = "<group>"; };
+		D2E0DE4C1C91604C00D999AE /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
+		D2E0DE4D1C91604C00D999AE /* MBProgressHUD+Add.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "MBProgressHUD+Add.h"; sourceTree = "<group>"; };
+		D2E0DE4E1C91604C00D999AE /* MBProgressHUD+Add.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MBProgressHUD+Add.m"; sourceTree = "<group>"; };
+		D2E0DE511C91650D00D999AE /* KWPopoverView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KWPopoverView.m; sourceTree = "<group>"; };
+		D2E0DE531C91653C00D999AE /* KWPopoverView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KWPopoverView.h; sourceTree = "<group>"; };
 		D2F724001C8FFB94003E6C29 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		D2F724021C8FFB9A003E6C29 /* MediaPlayer.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaPlayer.framework; path = System/Library/Frameworks/MediaPlayer.framework; sourceTree = SDKROOT; };
 		D2F724041C90004D003E6C29 /* PlayViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayViewController.swift; sourceTree = "<group>"; };
@@ -131,6 +144,7 @@
 		D254684E1C8EA056005ED0B5 /* PeachPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				D2625C5C1C9274DB00B96B30 /* model */,
 				D25A0FEF1C8FD3A500B88B95 /* class */,
 				D27E08871C8EA4400053CB6B /* source */,
 				D254684F1C8EA056005ED0B5 /* AppDelegate.swift */,
@@ -145,6 +159,7 @@
 				D25A0FF81C8FF41300B88B95 /* NSArray.swift */,
 				D25A0FFA1C8FF44500B88B95 /* NSDictionary.swift */,
 				D2F724041C90004D003E6C29 /* PlayViewController.swift */,
+				D2E0DE491C9107BC00D999AE /* Player.swift */,
 			);
 			path = PeachPlayer;
 			sourceTree = "<group>";
@@ -170,14 +185,28 @@
 		D25A0FEF1C8FD3A500B88B95 /* class */ = {
 			isa = PBXGroup;
 			children = (
+				D2E0DE4B1C91604C00D999AE /* MBProgressHUD.h */,
+				D2E0DE4C1C91604C00D999AE /* MBProgressHUD.m */,
+				D2E0DE4D1C91604C00D999AE /* MBProgressHUD+Add.h */,
+				D2E0DE4E1C91604C00D999AE /* MBProgressHUD+Add.m */,
 				D2180C581C8FBB8F002B7278 /* BEPAirDropHandler.h */,
 				D2180C591C8FBBD9002B7278 /* BEPAirDropHandler.m */,
 				D25A0FF01C8FD3B400B88B95 /* DOPNavbarMenu.h */,
 				D25A0FF11C8FD3F400B88B95 /* DOPNavbarMenu.m */,
 				D25A0FF31C8FD42D00B88B95 /* UIView+DOPExtension.h */,
 				D25A0FF41C8FD44700B88B95 /* UIView+DOPExtension.m */,
+				D2E0DE511C91650D00D999AE /* KWPopoverView.m */,
+				D2E0DE531C91653C00D999AE /* KWPopoverView.h */,
 			);
 			name = class;
+			sourceTree = "<group>";
+		};
+		D2625C5C1C9274DB00B96B30 /* model */ = {
+			isa = PBXGroup;
+			children = (
+				D2625C5D1C9274FE00B96B30 /* MusicModel.swift */,
+			);
+			name = model;
 			sourceTree = "<group>";
 		};
 		D27E08871C8EA4400053CB6B /* source */ = {
@@ -325,13 +354,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D2E0DE4A1C9107BC00D999AE /* Player.swift in Sources */,
 				D25A0FF91C8FF41300B88B95 /* NSArray.swift in Sources */,
 				D25A0FF51C8FD44700B88B95 /* UIView+DOPExtension.m in Sources */,
 				D2180C5A1C8FBBD9002B7278 /* BEPAirDropHandler.m in Sources */,
 				D25468521C8EA056005ED0B5 /* ViewController.swift in Sources */,
 				D25A0FF21C8FD3F400B88B95 /* DOPNavbarMenu.m in Sources */,
 				D25A0FFB1C8FF44500B88B95 /* NSDictionary.swift in Sources */,
+				D2E0DE501C91604C00D999AE /* MBProgressHUD+Add.m in Sources */,
+				D2625C5E1C9274FE00B96B30 /* MusicModel.swift in Sources */,
+				D2E0DE4F1C91604C00D999AE /* MBProgressHUD.m in Sources */,
 				D2F724051C90004D003E6C29 /* PlayViewController.swift in Sources */,
+				D2E0DE521C91650D00D999AE /* KWPopoverView.m in Sources */,
 				D25468501C8EA056005ED0B5 /* AppDelegate.swift in Sources */,
 				D25A0FEE1C8FC59F00B88B95 /* FileManager.swift in Sources */,
 				D25A0FF71C8FD65800B88B95 /* Common.swift in Sources */,

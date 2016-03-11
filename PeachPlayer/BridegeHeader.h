@@ -11,5 +11,7 @@
 
 #import "BEPAirDropHandler.h"
 #import "DOPNavbarMenu.h"
+#import "MBProgressHUD+Add.h"
+#import "KWPopoverView.h"
 
 #endif /* BridegeHeader_h */
