@@ -7,8 +7,22 @@
 //
 
 import UIKit
+import Foundation
+import AVFoundation
+import MediaPlayer
 
-class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelegate, UITableViewDataSource {
+enum LoopType: Int{
+    case nomailLoop = 0,
+    randomLoop = 1,
+    singleLoop = 2
+    
+}
+protocol PlayVCDelegate {
+    
+    func updateUI(data: MusicModel)
+}
+
+class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, AVAudioPlayerDelegate, UITableViewDelegate, UITableViewDataSource {
 
     var numberOfItemsInRow: Int!
     var menu: DOPNavbarMenu!
@@ -24,11 +38,29 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
     var snapshot = UIView()
     @IBOutlet weak var tableView: UITableView!
     
+    var podView: UIView!
+    var circleImgView: UIImageView!
+    var playButtonShow: UIButton!
+    var playButton: UIButton!
+    var nextButton: UIButton!
+    var preButton: UIButton!
+    var bottomView: UIView!
+    var loopButton: UIButton!
+    
+    
+    var currentDatas: [MusicModel] = []
+    var currentData: MusicModel!
+    var delegate: PlayVCDelegate!
+    var player: AVAudioPlayer!
+    var currentLoopType: LoopType = LoopType.nomailLoop
+    var currentIndex: Int = 0
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initMenu()
         initNav()
         initData()
+        initPlayView()
         self.automaticallyAdjustsScrollViewInsets = false
         tableView.delegate = self
         tableView.dataSource = self
@@ -36,6 +68,10 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
         let ges = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
         tableView.addGestureRecognizer(ges)
         alertController = UIAlertController(title: nil, message: "新建文件夹", preferredStyle: UIAlertControllerStyle.Alert)
+        
+        
+        
+
     }
     
     func initMenu() {
@@ -57,6 +93,8 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
         self.navigationController?.navigationBar.addGestureRecognizer(ges)
     }
     
+   
+    
     func initData() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
             if let weakSelf = self {
@@ -71,6 +109,148 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
                 })
             })
     }
+    
+    func initPlayView() {
+        podView = UIView(frame: CGRectMake(20, SCREEN_HEIGHT - 150, 140, 140))
+        self.view.addSubview(podView)
+        playButtonShow = UIButton(frame: CGRectMake(40, 40, 60, 60))
+        playButtonShow.layer.cornerRadius = 30
+        playButtonShow.layer.masksToBounds = true
+        //向右轻扫手势
+        let swipReg = UILongPressGestureRecognizer(target: self, action: "handleLP:")
+        swipReg.minimumPressDuration = 0.2
+        playButtonShow.addGestureRecognizer(swipReg)
+        
+        //画一个圆
+        UIGraphicsBeginImageContext(podView.bounds.size);
+        let context = UIGraphicsGetCurrentContext()
+        let ovalPath = UIBezierPath(ovalInRect: CGRectMake(5, 5, 130, 130))
+        //// Shadow Declarations
+        let shadow = UIColor.lightGrayColor()
+        let shadowOffset = CGSizeMake(0.1, 1.1)
+        let shadowBlurRadius: CGFloat = 5
+        //// Oval Drawing
+        CGContextSaveGState(context)
+        CGContextSetShadowWithColor(context, shadowOffset, shadowBlurRadius, (shadow as UIColor).CGColor)
+        UIColor.lightGrayColor().setFill()
+        ovalPath.fill()
+        CGContextRestoreGState(context)
+        UIColor.lightGrayColor().setStroke()
+        ovalPath.lineWidth = 1
+        ovalPath.stroke()
+        let img = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        circleImgView = UIImageView(image: img)
+        podView.addSubview(circleImgView)
+        podView.addSubview(playButtonShow)
+        //播放，下一曲，上一曲，模式
+        //播放，暂停按钮
+        playButton = UIButton(frame: CGRectMake(60, 14, 20, 20))
+        playButton.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
+        playButton.contentMode = .ScaleAspectFit
+        let ges = UITapGestureRecognizer(target: self, action: "handlePlay")
+        ges.numberOfTapsRequired = 1
+        ges.numberOfTouchesRequired = 1
+        playButton.addGestureRecognizer(ges)
+        podView.addSubview(playButton)
+        //下一曲
+        nextButton = UIButton(frame: CGRectMake(108, 60, 20, 20))
+        nextButton.setImage(UIImage(named: "next_piece"), forState: .Normal)
+        nextButton.contentMode = .ScaleAspectFit
+        nextButton.addTarget(self, action: "next", forControlEvents: .TouchUpInside)
+        podView.addSubview(nextButton)
+        //模式切换按钮
+        loopButton = UIButton(frame: CGRectMake(60, 104, 20, 20))
+        loopButton.setImage(UIImage(named: "repeat"), forState: .Normal)
+        loopButton.contentMode = .ScaleAspectFit
+        loopButton.addTarget(self, action: "changeLoopType", forControlEvents: .TouchUpInside)
+        podView.addSubview(loopButton)
+        //上一曲
+        preButton = UIButton(frame: CGRectMake(13, 60, 20, 20))
+        preButton.setImage(UIImage(named: "last_piece"), forState: .Normal)
+        preButton.contentMode = .ScaleAspectFit
+        preButton.addTarget(self, action: "pre", forControlEvents: .TouchUpInside)
+        podView.addSubview(preButton)
+        podView.hidden = true
+        showPodouter(false)
+        
+    }
+    
+    //pod 外环显示
+    func showPodouter(flag: Bool) {
+        if flag {
+            circleImgView.hidden = false
+            playButton.hidden = false
+            nextButton.hidden = false
+            preButton.hidden = false
+            loopButton.hidden = false
+        }else{
+            circleImgView.hidden = true
+            playButton.hidden = true
+            nextButton.hidden = true
+            preButton.hidden = true
+            loopButton.hidden = true
+        }
+    
+    }
+    
+    func handleLP(ges: UILongPressGestureRecognizer) {
+        let state = ges.state
+        if state == .Began {
+//            UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                self.circleImgView.hidden = false
+//                self.circleImgView.bounds.size = CGSize(width: 30, height: 30)
+//                self.circleImgView.alpha = 0.5
+//                }) { (flag) -> Void in
+                    self.circleImgView.bounds.size = CGSize(width: 60, height: 60)
+                    self.circleImgView.alpha = 1
+                    self.playButton.hidden = false
+                    self.nextButton.hidden = false
+                    self.preButton.hidden = false
+                    self.loopButton.hidden = false
+//                }
+
+            
+        }else if state == .Ended {
+            
+        }else{
+            
+        }
+    
+    }
+    
+    func podAnimation(flag: Bool) {
+        if flag{
+            UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                self.circleImgView.hidden = false
+                self.circleImgView.bounds.size = CGSize(width: 30, height: 30)
+                self.circleImgView.alpha = 0.5
+                }) { (flag) -> Void in
+                    self.circleImgView.bounds.size = CGSize(width: 60, height: 60)
+                    self.circleImgView.alpha = 1
+                    self.playButton.hidden = false
+                    self.nextButton.hidden = false
+                    self.preButton.hidden = false
+                    self.loopButton.hidden = false
+            }
+        }else{
+            UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
+                
+                self.circleImgView.bounds.size = CGSize(width: 30, height: 30)
+                self.circleImgView.alpha = 0.5
+                }) { (flag) -> Void in
+                    self.circleImgView.bounds.size = CGSize(width: 0, height: 0)
+                    self.circleImgView.alpha = 0
+                    self.circleImgView.hidden = true
+                    self.playButton.hidden = true
+                    self.nextButton.hidden = true
+                    self.preButton.hidden = true
+                    self.loopButton.hidden = true
+            }
+        }
+    
+    }
+    
     
     func isHideMenu() {
         if menu.open {
@@ -101,8 +281,6 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
         
         
     }
-    
-    
     
     //UITableView Delegate DataSource
     
@@ -161,19 +339,112 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
         return cell!
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let vc = PlayViewController()
         let dicts = datas[indexPath.section]
         var values: [MusicModel] = []
         for (key, value) in dicts {
             values = value
         }
-        let model: MusicModel = values[indexPath.row]
-        vc.data = model
-        vc.datas = values
-        self.navigationController?.pushViewController(vc, animated: true)
+        //默认进入该页面就是播放状态
+        currentDatas = values
+        currentData = values[indexPath.row]
+        Player.sharedInstance.initPlayer(currentDatas, data:  currentData )
+        Player.sharedInstance.delegate = self
+        //如果是第一次要显示pod
+        if podView.hidden {
+            UIView.animateWithDuration(0.3, animations: { () -> Void in
+                self.podView.hidden = false
+                self.podView.alpha = 0.5
+                }, completion: { (flag) -> Void in
+                    if flag {
+                        self.podView.alpha = 1
+                        self.updateUI(self.currentData)
+                    }
+            })
+            
+        }else{
+             self.updateUI(self.currentData)
+        }
+       
+        
     }
-  
+    func handlePlay() {
+        if Player.sharedInstance.player.playing {
+            Player.sharedInstance.player.pause()
+            playButton.setImage(UIImage(named: "play"), forState: .Normal)
+        }else{
+            Player.sharedInstance.player.play()
+            playButton.setImage(UIImage(named: "pause"), forState: .Normal)
+        }
+    }
+    func pre() {
+        Player.sharedInstance.playPreMusic()
+    }
+    func next() {
+        Player.sharedInstance.playNextMusic()
+    }
+    func showList(sender: UIButton) {
+        
+        
+        let view = UIView(frame: CGRectMake(0,0,111,111))
+        view.backgroundColor = UIColor.redColor()
+        let point = CGPoint(x: SCREEN_WIDTH - 35, y: SCREEN_HEIGHT - 30)
+        KWPopoverView.showPopoverAtPoint(point, inView: self.view, withContentView: view)
+        
+    }
+    func updateUI(data: MusicModel) {
+        self.currentData = data
+        self.title = data.name
+        self.playButtonShow.setImage((currentData.image), forState: UIControlState.Normal)
+    }
     
+    func changeLoopType() {
+        if Player.sharedInstance.currentLoopType == LoopType.nomailLoop {
+            MBProgressHUD.showSuccess("随机播放", toView: self.view)
+            Player.sharedInstance.currentLoopType = LoopType.randomLoop
+            self.loopButton.setImage(UIImage(named: "random"), forState: .Normal)
+        }else if Player.sharedInstance.currentLoopType == LoopType.randomLoop {
+            MBProgressHUD.showSuccess("单曲循环", toView: self.view)
+            Player.sharedInstance.currentLoopType = LoopType.singleLoop
+            self.loopButton.setImage(UIImage(named: "repeat"), forState: .Normal)
+        }else {
+            MBProgressHUD.showSuccess("列表循环", toView: self.view)
+            Player.sharedInstance.currentLoopType = LoopType.nomailLoop
+            self.loopButton.setImage(UIImage(named: "repeat"), forState: .Normal)
+        }
+    }
+    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+        if event?.type == UIEventType.RemoteControl {
+            
+            switch event!.subtype {
+                
+            case UIEventSubtype.RemoteControlPause:
+                //点击了暂停
+                Player.sharedInstance.player.pause()
+                break;
+            case UIEventSubtype.RemoteControlNextTrack:
+                //点击了下一首
+                Player.sharedInstance.playNextMusic()
+                break;
+            case UIEventSubtype.RemoteControlPreviousTrack:
+                //点击了上一首
+                Player.sharedInstance.playPreMusic()
+                break;
+            case UIEventSubtype.RemoteControlPlay:
+                //点击了播放
+                Player.sharedInstance.player.play()
+                break;
+            default:
+                break;
+            }
+        }
+        
+    }
+   
+   
+    
+    
+    
+       
     
     func isMoveToDir(location: CGPoint) {
         for var i in 1...datas.count {
@@ -326,9 +597,6 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, UITableViewDelega
         snapshot.layer.shadowOpacity = 0.4
         return snapshot
     }
-    
-    
-   
     func addDir() { //出现输入弹框
         
         alertController.addTextFieldWithConfigurationHandler { (txt) -> Void in

@@ -9,13 +9,13 @@
 import Foundation
 import AVFoundation
 import MediaPlayer
-
-enum LoopType: Int{
-    case nomailLoop = 0,
-    randomLoop = 1,
-    singleLoop = 2
-    
-}
+//
+//enum LoopType: Int{
+//    case nomailLoop = 0,
+//    randomLoop = 1,
+//    singleLoop = 2
+//    
+//}
 
 class Player: NSObject, AVAudioPlayerDelegate {
     
@@ -44,7 +44,8 @@ class Player: NSObject, AVAudioPlayerDelegate {
         self.datas = datas
         player = try? AVAudioPlayer(data: data.data, fileTypeHint: "mp3")
         player.delegate = self
-       // self.player.play()
+        self.player.play()
+        
     }
     
     func configNowPlayingInfoCenter() {
@@ -67,7 +68,7 @@ class Player: NSObject, AVAudioPlayerDelegate {
         player = try? AVAudioPlayer(data: data.data, fileTypeHint: "mp3")
         player.delegate = self
         player.prepareToPlay()
-        self.delegate.updateUI()
+        self.delegate.updateUI(self.data)
     }
     
     

@@ -15,7 +15,6 @@ let SCREEN_HEIGHT: CGFloat = UIScreen.mainScreen().bounds.size.height
 class Common {
     
     static func musicImageWithData(url: NSURL) -> UIImage {
-        print(url.absoluteString)
         var data = NSData()
         let musicAsset = AVURLAsset(URL: url)
         for var format in musicAsset.availableMetadataFormats {

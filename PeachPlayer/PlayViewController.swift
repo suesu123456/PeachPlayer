@@ -11,13 +11,13 @@ import Foundation
 import AVFoundation
 
 
-protocol PlayVCDelegate {
-    
-    func updateUI()
-}
+//protocol PlayVCDelegate {
+//    
+//    func updateUI()
+//}
 
 
-class PlayViewController: UIViewController, PlayVCDelegate {
+class PlayViewController: UIViewController {
 
     var data = MusicModel()
     var datas: [MusicModel] = []
@@ -35,7 +35,7 @@ class PlayViewController: UIViewController, PlayVCDelegate {
         initView()
         //默认进入该页面就是播放状态
         Player.sharedInstance.initPlayer(datas,data:  data )
-        Player.sharedInstance.delegate = self
+       // Player.sharedInstance.delegate = self
         
         
        
