@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D207BAD11C969EC5001B05C3 /* IndexCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D207BAD01C969EC5001B05C3 /* IndexCell.swift */; };
+		D207BAD31C96A863001B05C3 /* LocalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D207BAD21C96A863001B05C3 /* LocalModel.swift */; };
 		D2180C5A1C8FBBD9002B7278 /* BEPAirDropHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D2180C591C8FBBD9002B7278 /* BEPAirDropHandler.m */; };
 		D25468501C8EA056005ED0B5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D254684F1C8EA056005ED0B5 /* AppDelegate.swift */; };
 		D25468521C8EA056005ED0B5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25468511C8EA056005ED0B5 /* ViewController.swift */; };
@@ -51,6 +53,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		D207BAD01C969EC5001B05C3 /* IndexCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IndexCell.swift; sourceTree = "<group>"; };
+		D207BAD21C96A863001B05C3 /* LocalModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalModel.swift; sourceTree = "<group>"; };
 		D2180C571C8FBB74002B7278 /* BridegeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridegeHeader.h; sourceTree = "<group>"; };
 		D2180C581C8FBB8F002B7278 /* BEPAirDropHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BEPAirDropHandler.h; sourceTree = "<group>"; };
 		D2180C591C8FBBD9002B7278 /* BEPAirDropHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEPAirDropHandler.m; sourceTree = "<group>"; };
@@ -160,6 +164,8 @@
 				D25A0FFA1C8FF44500B88B95 /* NSDictionary.swift */,
 				D2F724041C90004D003E6C29 /* PlayViewController.swift */,
 				D2E0DE491C9107BC00D999AE /* Player.swift */,
+				D207BAD01C969EC5001B05C3 /* IndexCell.swift */,
+				D207BAD21C96A863001B05C3 /* LocalModel.swift */,
 			);
 			path = PeachPlayer;
 			sourceTree = "<group>";
@@ -356,6 +362,7 @@
 			files = (
 				D2E0DE4A1C9107BC00D999AE /* Player.swift in Sources */,
 				D25A0FF91C8FF41300B88B95 /* NSArray.swift in Sources */,
+				D207BAD11C969EC5001B05C3 /* IndexCell.swift in Sources */,
 				D25A0FF51C8FD44700B88B95 /* UIView+DOPExtension.m in Sources */,
 				D2180C5A1C8FBBD9002B7278 /* BEPAirDropHandler.m in Sources */,
 				D25468521C8EA056005ED0B5 /* ViewController.swift in Sources */,
@@ -366,6 +373,7 @@
 				D2E0DE4F1C91604C00D999AE /* MBProgressHUD.m in Sources */,
 				D2F724051C90004D003E6C29 /* PlayViewController.swift in Sources */,
 				D2E0DE521C91650D00D999AE /* KWPopoverView.m in Sources */,
+				D207BAD31C96A863001B05C3 /* LocalModel.swift in Sources */,
 				D25468501C8EA056005ED0B5 /* AppDelegate.swift in Sources */,
 				D25A0FEE1C8FC59F00B88B95 /* FileManager.swift in Sources */,
 				D25A0FF71C8FD65800B88B95 /* Common.swift in Sources */,

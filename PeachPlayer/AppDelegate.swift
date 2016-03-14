@@ -59,6 +59,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }else{
                 BEPAirDropHandler.sharedInstance().saveAirDropURL(url)
             }
+            //如果后台还在运行，则要通知更新  数据
+            NSNotificationCenter.defaultCenter().postNotificationName("getFromAir", object: nil)
             return true
         }
         return false

@@ -13,5 +13,5 @@ class MusicModel: NSObject {
     var size: Int = 0 // 歌曲大小
     var image: UIImage = UIImage() // 歌曲图片
     var data: NSData = NSData() // 歌曲内容
-
+    
 }

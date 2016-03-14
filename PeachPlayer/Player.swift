@@ -48,6 +48,7 @@ class Player: NSObject, AVAudioPlayerDelegate {
         
     }
     
+    
     func configNowPlayingInfoCenter() {
         self.data = datas[currentIndex]
         var dict = [String: AnyObject]()

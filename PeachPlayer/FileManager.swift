@@ -14,39 +14,80 @@ class FileManager: NSObject {
     static var airdrop: String = "AirDrop"
     
     //读取所有文件列表
-    static func readList() -> [[String: [MusicModel]]] {
-        var result: [[String: [MusicModel]]] = []
+    static func readList() ->  [MusicModel] {
+        var result: [MusicModel] = []
         let air = isExitFile(true, fileName: "", directory: airdrop)
+        var urls: [String] = []
         if air { //如果有传过文件
-            let urls: [String] = applicationReadFileOfDirectoryAtPath("", directory: airdrop) as! [String]
-            var i = 0
-            var dir = "/"
-            let dict = [dir: [MusicModel]()]
-            result.append(dict)
+            urls = applicationReadFileOfDirectoryAtPath("", directory: airdrop) as! [String]
             for var fileName in urls {
                 let filePath = applicationFilePath(fileName, directory: airdrop)
-                var flag: ObjCBool = false
-                NSFileManager.defaultManager().fileExistsAtPath(filePath, isDirectory: &flag)
-                if flag {
-                   //是文件夹
-                    let dict = [fileName: [MusicModel]()]
-                    result.append(dict)
-                    dir = fileName
-                    i++
-                    continue
-                }
-                var model = MusicModel()
+                let model = MusicModel()
                 let data = NSData.dataWithContentsOfMappedFile(filePath) as! NSData
                 model.name = fileName
                 model.size = data.length
                 model.image = Common.musicImageWithData(NSURL(fileURLWithPath: filePath))
                 model.data = data
-                result[0]["/"]?.append(model)
+                result.append(model)
             }
         }
-        return result
+        let local = LocalModel.getSortData()
+        if local.count == 0 {
+            LocalModel.saveSortData(urls)
+            return result
+        }
+        if local == urls {
+            return result
+        }
+        //重新对result排序
+        var result2: [MusicModel] = []
+        for var b in local {
+            for var a in result {
+                if b == a.name {
+                    result2.append(a)
+                }
+            }
+        }
+        return result2
     }
+
+    static func removeFile(name: String) -> Bool {
+        return applicationRemoveFileAtPath(name, directory: airdrop)
     
+    }
+//    static func readList() -> [[String: [MusicModel]]] {
+//        var result: [[String: [MusicModel]]] = []
+//        let air = isExitFile(true, fileName: "", directory: airdrop)
+//        if air { //如果有传过文件
+//            let urls: [String] = applicationReadFileOfDirectoryAtPath("", directory: airdrop) as! [String]
+//            var i = 0
+//            var dir = "/"
+//            let dict = [dir: [MusicModel]()]
+//            result.append(dict)
+//            for var fileName in urls {
+//                let filePath = applicationFilePath(fileName, directory: airdrop)
+//                var flag: ObjCBool = false
+//                NSFileManager.defaultManager().fileExistsAtPath(filePath, isDirectory: &flag)
+//                if flag {
+//                   //是文件夹
+//                    let dict = [fileName: [MusicModel]()]
+//                    result.append(dict)
+//                    dir = fileName
+//                    i++
+//                    continue
+//                }
+//                var model = MusicModel()
+//                let data = NSData.dataWithContentsOfMappedFile(filePath) as! NSData
+//                model.name = fileName
+//                model.size = data.length
+//                model.image = Common.musicImageWithData(NSURL(fileURLWithPath: filePath))
+//                model.data = data
+//                result[0]["/"]?.append(model)
+//            }
+//        }
+//        return result
+//    }
+//    
     //在根目录新建文件夹
     static func createDir(name: String) {
         self.applicationCreatFileAtPath(true, fileName: "", directory: airdrop + "/" + name)
@@ -129,5 +170,18 @@ class FileManager: NSObject {
             }
         }
     }
+    static func applicationRemoveFileAtPath(fileName: String ,directory: String) -> Bool{
+        
+        let filePath = applicationFilePath(fileName, directory: directory)
+        
+        do {
+            try NSFileManager.defaultManager().removeItemAtPath(filePath)
+            return true
+        } catch _ {
+            return false
+        }
+        
+    }
+
 
 }

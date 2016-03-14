@@ -22,21 +22,20 @@ protocol PlayVCDelegate {
     func updateUI(data: MusicModel)
 }
 
-class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, AVAudioPlayerDelegate, UITableViewDelegate, UITableViewDataSource {
+class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, AVAudioPlayerDelegate, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating, UISearchBarDelegate {
 
     var numberOfItemsInRow: Int!
     var menu: DOPNavbarMenu!
-    var datas: [[String: [MusicModel]]] = []
-    var dirs: [String] = []
+    var datas: [MusicModel] = []
+    var datasBeta: [MusicModel] = []
     var topView: UIView!
-    var alertController: UIAlertController!
     
     
     var touchPoints: [NSValue] = []
     var sourceIndexPath: NSIndexPath = NSIndexPath()
-    var sourceIndexPath2: NSIndexPath = NSIndexPath()
     var snapshot = UIView()
     @IBOutlet weak var tableView: UITableView!
+    var searchController: UISearchController!
     
     var podView: UIView!
     var circleImgView: UIImageView!
@@ -44,19 +43,18 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
     var playButton: UIButton!
     var nextButton: UIButton!
     var preButton: UIButton!
-    var bottomView: UIView!
     var loopButton: UIButton!
     
-    
-    var currentDatas: [MusicModel] = []
     var currentData: MusicModel!
     var delegate: PlayVCDelegate!
     var player: AVAudioPlayer!
     var currentLoopType: LoopType = LoopType.nomailLoop
     var currentIndex: Int = 0
+    var pwanna: Int = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "getFromAir", name: "getFromAir", object: nil)
         initMenu()
         initNav()
         initData()
@@ -67,13 +65,16 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         tableView.tableFooterView = UIView()
         let ges = UILongPressGestureRecognizer(target: self, action: "handleLongPress:")
         tableView.addGestureRecognizer(ges)
-        alertController = UIAlertController(title: nil, message: "新建文件夹", preferredStyle: UIAlertControllerStyle.Alert)
         
-        
-        
-
+        searchController = UISearchController(searchResultsController: nil)
+        searchController.searchResultsUpdater = self
+        searchController.dimsBackgroundDuringPresentation = false
+        searchController.searchBar.sizeToFit()
+        searchController.searchBar.backgroundColor = UIColor.grayColor()
     }
-    
+    func getFromAir() {
+        initData()
+    }
     func initMenu() {
         self.numberOfItemsInRow = 3
         let item1 = DOPNavbarMenuItem(title: "列表", icon: nil)
@@ -93,12 +94,11 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         self.navigationController?.navigationBar.addGestureRecognizer(ges)
     }
     
-   
-    
     func initData() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
             if let weakSelf = self {
                weakSelf.datas = FileManager.readList()
+               weakSelf.datasBeta = weakSelf.datas
             }
             dispatch_async(dispatch_get_main_queue(), { [weak self]() -> Void in
                 if let weakSelf = self {
@@ -111,11 +111,12 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
     }
     
     func initPlayView() {
-        podView = UIView(frame: CGRectMake(20, SCREEN_HEIGHT - 150, 140, 140))
+        podView = UIView(frame: CGRectMake(SCREEN_WIDTH - 150, SCREEN_HEIGHT - 150, 140, 140))
         self.view.addSubview(podView)
         playButtonShow = UIButton(frame: CGRectMake(40, 40, 60, 60))
         playButtonShow.layer.cornerRadius = 30
         playButtonShow.layer.masksToBounds = true
+        playButtonShow.alpha = 0.8
         //向右轻扫手势
         let swipReg = UILongPressGestureRecognizer(target: self, action: "handleLP:")
         swipReg.minimumPressDuration = 0.2
@@ -197,24 +198,59 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
     func handleLP(ges: UILongPressGestureRecognizer) {
         let state = ges.state
         if state == .Began {
-//            UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
-                self.circleImgView.hidden = false
-//                self.circleImgView.bounds.size = CGSize(width: 30, height: 30)
-//                self.circleImgView.alpha = 0.5
-//                }) { (flag) -> Void in
-                    self.circleImgView.bounds.size = CGSize(width: 60, height: 60)
-                    self.circleImgView.alpha = 1
-                    self.playButton.hidden = false
-                    self.nextButton.hidden = false
-                    self.preButton.hidden = false
-                    self.loopButton.hidden = false
-//                }
-
-            
+            podAnimation(true)
         }else if state == .Ended {
-            
+            podAnimation(false)
+            preButton.alpha = 1
+            playButton.alpha = 1
+            nextButton.alpha = 1
+            loopButton.alpha = 1
+            if pwanna == 1{
+                self.handlePlay()
+            }else if pwanna == 2 {
+                self.next()
+            }else if pwanna == 3 {
+                self.changeLoopType()
+            }else if pwanna == 4 {
+                self.pre()
+            }
         }else{
-            
+            let endPoint = ges.locationInView(self.podView)
+            //60, 14, 20, 20播放
+            if endPoint.y <= 14 && endPoint.x < 108{
+                playButton.alpha = 0.3
+                nextButton.alpha = 1
+                loopButton.alpha = 1
+                preButton.alpha = 1
+                pwanna = 1
+            }//108, 60, 20, 20)下一曲
+            else if endPoint.x >= 108 && endPoint.y < 104 {
+                nextButton.alpha = 0.3
+                playButton.alpha = 1
+                loopButton.alpha = 1
+                preButton.alpha = 1
+                pwanna = 2
+            }//60, 104, 20, 20 模式切换
+            else if  endPoint.y >= 104 && endPoint.x > 13 {
+                loopButton.alpha = 0.3
+                playButton.alpha = 1
+                nextButton.alpha = 1
+                preButton.alpha = 1
+                pwanna = 3
+            }//13, 60, 上一曲
+            else if endPoint.x <= 13 && endPoint.y < 104 && endPoint.y > 14 {
+                preButton.alpha = 0.3
+                playButton.alpha = 1
+                nextButton.alpha = 1
+                loopButton.alpha = 1
+                pwanna = 4
+            }else{
+                preButton.alpha = 1
+                playButton.alpha = 1
+                nextButton.alpha = 1
+                loopButton.alpha = 1
+                pwanna = 0
+            }
         }
     
     }
@@ -223,23 +259,21 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         if flag{
             UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                 self.circleImgView.hidden = false
-                self.circleImgView.bounds.size = CGSize(width: 30, height: 30)
                 self.circleImgView.alpha = 0.5
                 }) { (flag) -> Void in
-                    self.circleImgView.bounds.size = CGSize(width: 60, height: 60)
-                    self.circleImgView.alpha = 1
-                    self.playButton.hidden = false
-                    self.nextButton.hidden = false
-                    self.preButton.hidden = false
-                    self.loopButton.hidden = false
+                    if flag {
+                        self.circleImgView.alpha = 1
+                        self.playButton.hidden = false
+                        self.nextButton.hidden = false
+                        self.preButton.hidden = false
+                        self.loopButton.hidden = false
+                    }
             }
         }else{
             UIView.animateWithDuration(0, delay: 0, options: UIViewAnimationOptions.CurveEaseInOut, animations: { () -> Void in
                 
-                self.circleImgView.bounds.size = CGSize(width: 30, height: 30)
                 self.circleImgView.alpha = 0.5
                 }) { (flag) -> Void in
-                    self.circleImgView.bounds.size = CGSize(width: 0, height: 0)
                     self.circleImgView.alpha = 0
                     self.circleImgView.hidden = true
                     self.playButton.hidden = true
@@ -278,77 +312,80 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         if index == 0 { // 列表
             
         }
-        
-        
+    }
+    //search delegate
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        let text = searchController.searchBar.text!
+        if text == "" {
+            datas = datasBeta
+        }else{
+            datas = datas.filter { (model: MusicModel) -> Bool in
+                if model.name.lowercaseString.containsString(text.lowercaseString) {
+
+                    return true
+                }
+                return false
+            }
+        }
+        dispatch_async(dispatch_get_main_queue()) { () -> Void in
+            self.tableView.reloadData()
+        }
     }
     
     //UITableView Delegate DataSource
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return datas.count
+        
+        return 1
     }
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 64
+        return 84
     }
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         if datas.count > 0 {
-            var values: [MusicModel] = []
-            for (key, value) in datas[section] {
-                values = value
-            }
-            return values.count
+            return datas.count
         }
          return 0
     }
-    func tableView(tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 50
-    }
-    func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let view = UIView(frame: CGRectMake(0,0, SCREEN_WIDTH, 50))
-        let titleLabel = UILabel(frame: CGRectMake(10, 10, SCREEN_WIDTH - 50, 30))
-        titleLabel.text =  "📁" + [String](datas[section].keys)[0]
-        view.addSubview(titleLabel)
-        let addButton = UIButton(frame: CGRectMake(SCREEN_WIDTH - 50, 10, 40, 30))
-        addButton.setTitle("＋", forState: .Normal)
-        addButton.setTitleColor(UIColor.greenColor(), forState: .Normal)
-        addButton.addTarget(self, action: "addDir", forControlEvents: .TouchUpInside)
-        view.addSubview(addButton)
-        view.tag = section + 1
-        return view
-    }
+
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell: UITableViewCell? = tableView.dequeueReusableCellWithIdentifier("Cell")
+        var cell: IndexCell? = tableView.dequeueReusableCellWithIdentifier("Cell") as? IndexCell
         if cell == nil {
-            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "Cell")
+            cell = IndexCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "indexCell")
         }
         cell?.selectionStyle = .None
         if datas.count > 0 {
-            let dicts: [String: [MusicModel]] = datas[indexPath.section]
-            var values: [MusicModel] = []
-            for (key, value) in dicts {
-                values = value
-            }
-            if values.count > 0 {
-                let model: MusicModel = values[indexPath.row]
-                cell?.imageView?.image = model.image
-                cell?.textLabel?.text = model.name
-                cell?.detailTextLabel?.text = model.size.description
-            }
-        
+            
+                let model: MusicModel = datas[indexPath.row]
+                cell?.images?.image = model.image
+                cell?.titleLab?.text = model.name
+               
+                cell?.detailLab?.text = model.size.description
+            
         }
         return cell!
     }
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let dicts = datas[indexPath.section]
-        var values: [MusicModel] = []
-        for (key, value) in dicts {
-            values = value
-        }
+       
+        
         //默认进入该页面就是播放状态
-        currentDatas = values
-        currentData = values[indexPath.row]
-        Player.sharedInstance.initPlayer(currentDatas, data:  currentData )
+        currentData = self.datas[indexPath.row]
+        var index: Int = 0
+        var i = 0
+        if searchController.active {
+            for model in datasBeta {
+                if currentData == model{
+                    index = i
+                }
+                i++
+            }
+            searchController.active = false
+            
+        }
+        Player.sharedInstance.initPlayer(self.datas, data:  currentData )
         Player.sharedInstance.delegate = self
+        Player.sharedInstance.currentIndex = index
         //如果是第一次要显示pod
         if podView.hidden {
             UIView.animateWithDuration(0.3, animations: { () -> Void in
@@ -364,8 +401,47 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         }else{
              self.updateUI(self.currentData)
         }
-       
-        
+    }
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        if editingStyle == .Delete {
+            var flag = false
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
+                if let weakSelf = self {
+                    let model: MusicModel = weakSelf.datas[indexPath.row]
+                    flag = FileManager.removeFile(model.name)
+                }
+                dispatch_async(dispatch_get_main_queue(), { [weak self]() -> Void in
+                    if let weakSelf = self {
+                        if flag {
+                            weakSelf.datas.removeAtIndex(indexPath.row)
+                            weakSelf.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                            weakSelf.datasBeta = weakSelf.datas
+                        }else{
+                            MBProgressHUD.showError("删除失败咯！", toView: weakSelf.view)
+                        }
+                        
+                    }
+                    })
+                })
+           
+            
+        }
+    }
+    func scrollViewDidScroll(scrollView: UIScrollView) {
+        if scrollView.contentOffset.y < 0 {
+            if self.tableView.tableHeaderView == nil {
+                UIView.animateWithDuration(1, delay: 0, options: .TransitionCurlDown, animations: { () -> Void in
+                    self.tableView.tableHeaderView = self.searchController.searchBar
+                    self.tableView.tableHeaderView?.frame.size.height -= 10
+                    }, completion: { (finish) -> Void in
+                        
+                })
+                
+            }
+        }
     }
     func handlePlay() {
         if Player.sharedInstance.player.playing {
@@ -439,65 +515,7 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         }
         
     }
-   
-   
-    
-    
-    
-       
-    
-    func isMoveToDir(location: CGPoint) {
-        for var i in 1...datas.count {
-            let header = self.tableView.viewWithTag(i)
-            if CGRectContainsPoint(header!.frame, location){
-                print("移动到第\(i-1)个文件夹")
-                let alert = UIAlertController(title: "是否移动到[\([String](datas[i-1].keys)[0])]文件夹", message: nil, preferredStyle: .Alert)
-                let cancleaction = UIAlertAction(title: "取消", style: .Cancel, handler: { (action) -> Void in
-                    alert.dismissViewControllerAnimated(true, completion: nil)
-                })
-                let okaction = UIAlertAction(title: "确定", style: .Default, handler: { [weak self](action) -> Void in
-                    //移动到文件夹
-                    if let weakSelf = self {
-                        let dicts: [String: [MusicModel]] = weakSelf.datas[weakSelf.sourceIndexPath2.section]
-                        var values: [MusicModel] = []
-                        for (key, value) in dicts {
-                            values = value
-                        }
-                        var sourceName: String = ""
-                        if [String](weakSelf.datas[i-2].keys)[0] == "/" {
-                            sourceName =  values[weakSelf.sourceIndexPath2.row].name
-                        }else{
-                            sourceName = [String](weakSelf.datas[i-2].keys)[0] + "/" + values[weakSelf.sourceIndexPath2.row].name
-                        }
-                       weakSelf.moveToDir(sourceName, toDir: [String](weakSelf.datas[i-1].keys)[0], alert: alert)
-                        
-                    }
-                    
-                })
-                alert.addAction(cancleaction)
-                alert.addAction(okaction)
-                self.presentViewController(alert, animated: true, completion: nil)
-            }
-        }
-    }
-    func moveToDir(sourceName: String, toDir: String, alert: UIAlertController) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
-            if let weakSelf = self {
-                FileManager.moveToDir(sourceName, toDir: toDir)
-            }
-            dispatch_async(dispatch_get_main_queue(), { [weak self]() -> Void in
-                if let weakSelf = self {
-                    if weakSelf.datas.count > 0 {
-                        alert.dismissViewControllerAnimated(true, completion: nil)
-                        weakSelf.tableView.reloadData()
-                    }
-                }
-                })
-            })
-        
-        
-        
-    }
+
     //长按拖拽
     func handleLongPress(sender: UILongPressGestureRecognizer) {
         let state = sender.state
@@ -509,7 +527,6 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
             case UIGestureRecognizerState.Began:
                 if indexPath != nil { //是不是按在了cell上面
                     sourceIndexPath = indexPath!
-                    sourceIndexPath2 = indexPath!
                     let cell = self.tableView.cellForRowAtIndexPath(indexPath!)
                     //为拖动的cell添加一个快照
                     snapshot = self.customSnapshoFromView(cell!)
@@ -543,26 +560,28 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
                 snapshot.center = center;
               
                 // 是否移动了
-                if indexPath != nil && indexPath != sourceIndexPath {
+                if indexPath != nil && indexPath != sourceIndexPath && indexPath!.row != sourceIndexPath.row{
                     
                     // 更新数组中的内容
-//                    self.datas.
-//                    [self.dataArray exchangeObjectAtIndex:
-//                        indexPath.row withObjectAtIndex:sourceIndexPath.row];
-                    
+                    swap(&self.datas[indexPath!.row], &self.datas[sourceIndexPath.row])
                     // 把cell移动至指定行
                     self.tableView.moveRowAtIndexPath(sourceIndexPath, toIndexPath: indexPath!)
                     // 存储改变后indexPath的值，以便下次比较
-                    //sourceIndexPath = indexPath!;
+                    var local: [String] = LocalModel.getSortData()
+                    swap(&local[indexPath!.row], &local[sourceIndexPath.row] )
+                    LocalModel.saveSortData(local)
+                    sourceIndexPath = indexPath!;
+                    Player.sharedInstance.datas = datas
+                    self.datasBeta = datas
+
                 }
             
             break
             default:
                 //长安手势取消状态
-                print(sourceIndexPath2.section)
-                if indexPath?.row == nil && indexPath?.section == nil {
-                    isMoveToDir(location)
-                }
+//                if indexPath?.row == nil && indexPath?.section == nil {
+//                    isMoveToDir(location)
+//                }
                 self.touchPoints.removeAll()
                 let cell = self.tableView.cellForRowAtIndexPath(sourceIndexPath)
                 cell?.hidden = false
@@ -597,51 +616,103 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
         snapshot.layer.shadowOpacity = 0.4
         return snapshot
     }
-    func addDir() { //出现输入弹框
-        
-        alertController.addTextFieldWithConfigurationHandler { (txt) -> Void in
-            txt.placeholder = "文件夹名称"
-             NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("alertTextFieldDidChange:"), name: UITextFieldTextDidChangeNotification, object: txt)
-        }
-        
-        let okAction = UIAlertAction(title: "好的", style: UIAlertActionStyle.Default) {
-            (action: UIAlertAction!) -> Void in
-            let name = (self.alertController.textFields?.first!)! as UITextField
-            NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: nil)
-            //去新建文件夹
-            self.addDirAction(name.text!)
-            
-        }
-        okAction.enabled = false
-        alertController.addAction(okAction)
-       self.presentViewController(alertController, animated: true, completion: nil)
-    }
-    func alertTextFieldDidChange(notification: NSNotification){
-        
-        if (alertController != nil) {
-            let login = (alertController!.textFields?.first)! as UITextField
-            let okAction = alertController!.actions.last! as UIAlertAction
-            okAction.enabled = login.text?.characters.count > 2
-        }
-    }
-    func addDirAction(name: String) {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
-            if let weakSelf = self {
-                FileManager.createDir(name)
-            }
-            dispatch_async(dispatch_get_main_queue(), { [weak self]() -> Void in
-                if let weakSelf = self {
-                    if weakSelf.datas.count > 0 {
-                        weakSelf.alertController.dismissViewControllerAnimated(true, completion: nil)
-                        weakSelf.tableView.reloadData()
-                    }
-                }
-                })
-            })
-        
-        
-    
-    }
+//    func addDir() { //出现输入弹框
+//        
+//        alertController.addTextFieldWithConfigurationHandler { (txt) -> Void in
+//            txt.placeholder = "文件夹名称"
+//             NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("alertTextFieldDidChange:"), name: UITextFieldTextDidChangeNotification, object: txt)
+//        }
+//        
+//        let okAction = UIAlertAction(title: "好的", style: UIAlertActionStyle.Default) {
+//            (action: UIAlertAction!) -> Void in
+//            let name = (self.alertController.textFields?.first!)! as UITextField
+//            NSNotificationCenter.defaultCenter().removeObserver(self, name: UITextFieldTextDidChangeNotification, object: nil)
+//            //去新建文件夹
+//            self.addDirAction(name.text!)
+//            
+//        }
+//        okAction.enabled = false
+//        alertController.addAction(okAction)
+//       self.presentViewController(alertController, animated: true, completion: nil)
+//    }
+//    func alertTextFieldDidChange(notification: NSNotification){
+//        
+//        if (alertController != nil) {
+//            let login = (alertController!.textFields?.first)! as UITextField
+//            let okAction = alertController!.actions.last! as UIAlertAction
+//            okAction.enabled = login.text?.characters.count > 2
+//        }
+//    }
+//    func addDirAction(name: String) {
+//        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
+//            if let weakSelf = self {
+//                FileManager.createDir(name)
+//            }
+//            dispatch_async(dispatch_get_main_queue(), { [weak self]() -> Void in
+//                if let weakSelf = self {
+//                    if weakSelf.datas.count > 0 {
+//                        weakSelf.alertController.dismissViewControllerAnimated(true, completion: nil)
+//                        weakSelf.tableView.reloadData()
+//                    }
+//                }
+//                })
+//            })
+//        
+//        
+//    
+//    }
+    //    func isMoveToDir(location: CGPoint) {
+    //        for var i in 1...datas.count {
+    //            let header = self.tableView.viewWithTag(i)
+    //            if CGRectContainsPoint(header!.frame, location){
+    //                print("移动到第\(i-1)个文件夹")
+    //                let alert = UIAlertController(title: "是否移动到[\([String](datas[i-1].keys)[0])]文件夹", message: nil, preferredStyle: .Alert)
+    //                let cancleaction = UIAlertAction(title: "取消", style: .Cancel, handler: { (action) -> Void in
+    //                    alert.dismissViewControllerAnimated(true, completion: nil)
+    //                })
+    //                let okaction = UIAlertAction(title: "确定", style: .Default, handler: { [weak self](action) -> Void in
+    //                    //移动到文件夹
+    //                    if let weakSelf = self {
+    //                        let dicts: [String: [MusicModel]] = weakSelf.datas[weakSelf.sourceIndexPath2.section]
+    //                        var values: [MusicModel] = []
+    //                        for (key, value) in dicts {
+    //                            values = value
+    //                        }
+    //                        var sourceName: String = ""
+    //                        if [String](weakSelf.datas[i-2].keys)[0] == "/" {
+    //                            sourceName =  values[weakSelf.sourceIndexPath2.row].name
+    //                        }else{
+    //                            sourceName = [String](weakSelf.datas[i-2].keys)[0] + "/" + values[weakSelf.sourceIndexPath2.row].name
+    //                        }
+    //                       weakSelf.moveToDir(sourceName, toDir: [String](weakSelf.datas[i-1].keys)[0], alert: alert)
+    //
+    //                    }
+    //
+    //                })
+    //                alert.addAction(cancleaction)
+    //                alert.addAction(okaction)
+    //                self.presentViewController(alert, animated: true, completion: nil)
+    //            }
+    //        }
+    //    }
+    //    func moveToDir(sourceName: String, toDir: String, alert: UIAlertController) {
+    //        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0) , { [weak self]() -> Void in
+    //            if let weakSelf = self {
+    //                FileManager.moveToDir(sourceName, toDir: toDir)
+    //            }
+    //            dispatch_async(dispatch_get_main_queue(), { [weak self]() -> Void in
+    //                if let weakSelf = self {
+    //                    if weakSelf.datas.count > 0 {
+    //                        alert.dismissViewControllerAnimated(true, completion: nil)
+    //                        weakSelf.tableView.reloadData()
+    //                    }
+    //                }
+    //                })
+    //            })
+    //        
+    //        
+    //        
+    //    }
 
 }
 
