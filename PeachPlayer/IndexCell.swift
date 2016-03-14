@@ -24,6 +24,8 @@ class IndexCell: UITableViewCell {
         titleLab = UILabel(frame: CGRectMake(70, 15, SCREEN_WIDTH - 80, 30))
         self.addSubview(titleLab)
         detailLab = UILabel(frame: CGRectMake(70, titleLab.frame.maxY + 8, 200, 20))
+        detailLab.textColor = UIColor.grayColor()
+        detailLab.font = UIFont.systemFontOfSize(12)
         self.addSubview(detailLab)
     }
     required init?(coder aDecoder: NSCoder) {

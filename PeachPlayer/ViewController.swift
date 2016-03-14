@@ -360,8 +360,10 @@ class ViewController: UIViewController, DOPNavbarMenuDelegate, PlayVCDelegate, A
                 let model: MusicModel = datas[indexPath.row]
                 cell?.images?.image = model.image
                 cell?.titleLab?.text = model.name
-               
-                cell?.detailLab?.text = model.size.description
+                let nf = NSNumberFormatter()
+                nf.numberStyle = NSNumberFormatterStyle.DecimalStyle
+                nf.maximumFractionDigits = 2
+                cell?.detailLab?.text = nf.stringFromNumber( model.size )! + "MB"
             
         }
         return cell!

@@ -25,7 +25,7 @@ class FileManager: NSObject {
                 let model = MusicModel()
                 let data = NSData.dataWithContentsOfMappedFile(filePath) as! NSData
                 model.name = fileName
-                model.size = data.length
+                model.size = Float(data.length) / 1024.0 / 1024.0
                 model.image = Common.musicImageWithData(NSURL(fileURLWithPath: filePath))
                 model.data = data
                 result.append(model)

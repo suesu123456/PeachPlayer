@@ -42,7 +42,7 @@ class Player: NSObject, AVAudioPlayerDelegate {
     func initPlayer(datas: [MusicModel], data: MusicModel) {
         
         self.datas = datas
-        player = try? AVAudioPlayer(data: data.data, fileTypeHint: "mp3")
+        player = try? AVAudioPlayer(data: data.data)
         player.delegate = self
         self.player.play()
         
