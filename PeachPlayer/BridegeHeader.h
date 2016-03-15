@@ -13,5 +13,6 @@
 #import "DOPNavbarMenu.h"
 #import "MBProgressHUD+Add.h"
 #import "KWPopoverView.h"
+#import "FFmpegWrapper/FFmpegWrapper.h"
 
 #endif /* BridegeHeader_h */

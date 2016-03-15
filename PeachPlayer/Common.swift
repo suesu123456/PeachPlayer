@@ -28,8 +28,7 @@ class Common {
         if data.length > 0 {
             return UIImage(data: data)!
         }
-        return UIImage(data: data)!
-    
+        return UIImage(named: "default")!
     }
     
 }

@@ -10,6 +10,8 @@
 		D207BAD11C969EC5001B05C3 /* IndexCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D207BAD01C969EC5001B05C3 /* IndexCell.swift */; };
 		D207BAD31C96A863001B05C3 /* LocalModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D207BAD21C96A863001B05C3 /* LocalModel.swift */; };
 		D2180C5A1C8FBBD9002B7278 /* BEPAirDropHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = D2180C591C8FBBD9002B7278 /* BEPAirDropHandler.m */; };
+		D23CB7701C980E8400E0030C /* FFmpegWrapper in Resources */ = {isa = PBXBuildFile; fileRef = D23CB76F1C980E8400E0030C /* FFmpegWrapper */; };
+		D23CB7721C980F9700E0030C /* libz.1.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D23CB7711C980F9700E0030C /* libz.1.dylib */; };
 		D25468501C8EA056005ED0B5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D254684F1C8EA056005ED0B5 /* AppDelegate.swift */; };
 		D25468521C8EA056005ED0B5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25468511C8EA056005ED0B5 /* ViewController.swift */; };
 		D25468551C8EA056005ED0B5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D25468531C8EA056005ED0B5 /* Main.storyboard */; };
@@ -58,6 +60,8 @@
 		D2180C571C8FBB74002B7278 /* BridegeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BridegeHeader.h; sourceTree = "<group>"; };
 		D2180C581C8FBB8F002B7278 /* BEPAirDropHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BEPAirDropHandler.h; sourceTree = "<group>"; };
 		D2180C591C8FBBD9002B7278 /* BEPAirDropHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BEPAirDropHandler.m; sourceTree = "<group>"; };
+		D23CB76F1C980E8400E0030C /* FFmpegWrapper */ = {isa = PBXFileReference; lastKnownFileType = folder; path = FFmpegWrapper; sourceTree = "<group>"; };
+		D23CB7711C980F9700E0030C /* libz.1.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.1.dylib; path = ../../../../../usr/lib/libz.1.dylib; sourceTree = "<group>"; };
 		D254684C1C8EA056005ED0B5 /* PeachPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PeachPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D254684F1C8EA056005ED0B5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D25468511C8EA056005ED0B5 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -99,6 +103,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D23CB7721C980F9700E0030C /* libz.1.dylib in Frameworks */,
 				D2F724031C8FFB9A003E6C29 /* MediaPlayer.framework in Frameworks */,
 				D2F724011C8FFB94003E6C29 /* CoreMedia.framework in Frameworks */,
 				D28EE10A1C8ECB0C00C655A8 /* AVFoundation.framework in Frameworks */,
@@ -125,6 +130,7 @@
 		D25468431C8EA056005ED0B5 = {
 			isa = PBXGroup;
 			children = (
+				D23CB7711C980F9700E0030C /* libz.1.dylib */,
 				D2F724021C8FFB9A003E6C29 /* MediaPlayer.framework */,
 				D2F724001C8FFB94003E6C29 /* CoreMedia.framework */,
 				D28EE1091C8ECB0C00C655A8 /* AVFoundation.framework */,
@@ -191,6 +197,7 @@
 		D25A0FEF1C8FD3A500B88B95 /* class */ = {
 			isa = PBXGroup;
 			children = (
+				D23CB76F1C980E8400E0030C /* FFmpegWrapper */,
 				D2E0DE4B1C91604C00D999AE /* MBProgressHUD.h */,
 				D2E0DE4C1C91604C00D999AE /* MBProgressHUD.m */,
 				D2E0DE4D1C91604C00D999AE /* MBProgressHUD+Add.h */,
@@ -334,6 +341,7 @@
 			files = (
 				D27E08891C8EA44C0053CB6B /* 陶喆 - 一念之间.mp3 in Resources */,
 				D254685A1C8EA056005ED0B5 /* LaunchScreen.storyboard in Resources */,
+				D23CB7701C980E8400E0030C /* FFmpegWrapper in Resources */,
 				D25468571C8EA056005ED0B5 /* Assets.xcassets in Resources */,
 				D25468551C8EA056005ED0B5 /* Main.storyboard in Resources */,
 			);
@@ -468,6 +476,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -507,6 +516,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				LIBRARY_SEARCH_PATHS = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -519,9 +529,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PeachPlayer/FFmpegWrapper/";
 				INFOPLIST_FILE = PeachPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = sue.PeachPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = PeachPlayer/BridegeHeader.h;
@@ -534,9 +547,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/PeachPlayer/FFmpegWrapper/";
 				INFOPLIST_FILE = PeachPlayer/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = sue.PeachPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = PeachPlayer/BridegeHeader.h;
@@ -548,6 +564,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PeachPlayerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sue.PeachPlayerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -560,6 +577,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				INFOPLIST_FILE = PeachPlayerTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = sue.PeachPlayerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

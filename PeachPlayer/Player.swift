@@ -66,7 +66,7 @@ class Player: NSObject, AVAudioPlayerDelegate {
     //播放特定歌曲
     func willPlayAudioWithIndex(index: Int) {
         self.data = datas[index]
-        player = try? AVAudioPlayer(data: data.data, fileTypeHint: "mp3")
+        player = try? AVAudioPlayer(data: data.data)
         player.delegate = self
         player.prepareToPlay()
         self.delegate.updateUI(self.data)

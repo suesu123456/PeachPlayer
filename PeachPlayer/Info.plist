@@ -14,7 +14,10 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>public.audio</string>
-				<string>public.data</string>
+				<string>public.mp3</string>
+				<string>public.mpeg-4-audio</string>
+                <string>org.flac.flac-audio</string>
+                <string>com.microsoft.waveform-audio</string>
 			</array>
 		</dict>
 	</array>
@@ -50,8 +53,6 @@
 	</array>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleBlackOpaque</string>
-	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -65,19 +66,120 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.audio</string>
-				<string>public.data</string>
 			</array>
+			<key>UTTypeDescription</key>
+			<string>MP3 Audio</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.apple.quicktime-movie</string>
+			<string>public.mp3</string>
 			<key>UTTypeTagSpecification</key>
-			<dict/>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>mp3</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>audio/mpeg</string>
+				</array>
+			</dict>
 		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.audio</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>FLAC Audio</string>
+			<key>UTTypeIdentifier</key>
+			<string>org.flac.flac-audio</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>flac</string>
+				</array>
+
+			</dict>
+		</dict>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>org.xiph.ogg-vorbis-audio</string>
+            
+            <key>UTTypeDescription</key>
+            <string>Ogg Vorbis Audio</string>
+            
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.audio</string>
+            </array>
+            
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>ogg</string>
+                    <string>oga</string>
+                </array>
+                <key>public.mime-type</key>
+                <array>
+                    <string>audio/vorbis</string>
+                </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>com.microsoft.waveform-audio</string>
+            
+            <key>UTTypeDescription</key>
+            <string>WAV Audio</string>
+            
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.audio</string>
+            </array>
+            
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>wav</string>
+                </array>
+            </dict>
+        </dict>
+        <dict>
+            <key>UTTypeIdentifier</key>
+            <string>public.mpeg-4-audio</string>
+            
+            <key>UTTypeDescription</key>
+            <string>MPEG-4 Audio</string>
+            
+            <key>UTTypeConformsTo</key>
+            <array>
+                <string>public.audio</string>
+                <string>public.mpeg-4</string>
+            </array>
+            
+            <key>UTTypeTagSpecification</key>
+            <dict>
+                <key>public.filename-extension</key>
+                <array>
+                    <string>aac</string>
+                    <string>m4a</string>
+                </array>
+                <key>public.mime-type</key>
+                <array>
+                    <string>audio/mp4</string>
+                </array>
+            </dict>
+        </dict>
 	</array>
 </dict>
 </plist>

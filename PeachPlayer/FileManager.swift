@@ -20,6 +20,7 @@ class FileManager: NSObject {
         var urls: [String] = []
         if air { //如果有传过文件
             urls = applicationReadFileOfDirectoryAtPath("", directory: airdrop) as! [String]
+            LocalModel.saveSortData(urls)
             for var fileName in urls {
                 let filePath = applicationFilePath(fileName, directory: airdrop)
                 let model = MusicModel()
@@ -33,7 +34,6 @@ class FileManager: NSObject {
         }
         let local = LocalModel.getSortData()
         if local.count == 0 {
-            LocalModel.saveSortData(urls)
             return result
         }
         if local == urls {
